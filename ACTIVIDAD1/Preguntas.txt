@@ -1,0 +1,21 @@
+Responder las siguientes preguntas:
+¿Qué tipo de proceso realiza fetch()? 
+El método fetch() realiza un proceso asíncrono para enviar y recibir peticiones vía HTTP.
+
+¿Por qué es asíncrono?
+El proceso es asíncrono porque cuando pedimos datos por internet (con una petición HTTP),
+no sabemos exactamente cuánto va a tardar el servidor en responder; depende de la conexión, 
+el tráfico y el peso de los datos.
+Como JavaScript funciona en un solo hilo (hace una sola cosa a la vez), si esperara la respuesta de forma síncrona,
+toda la página se congelaría y el usuario no podría hacer clic ni interactuar con nada.
+Para que esto no pase, funciones como fetch() trabajan en segundo plano (usando las APIs del navegador). 
+Así, el programa sigue funcionando normalmente y, cuando la respuesta por fin llega, 
+el Event Loop se encarga de avisarle a JavaScript para procesar los datos con una Promesa, 
+sin trabar la pantalla ni arruinar la experiencia del usuario.
+
+¿Qué protocolo utiliza en este caso? 
+En este caso, el método fetch() utiliza el protocolo HTTP o su versión segura HTTPS.
+
+¿Cuál es el URL completo al recurso productos.json? 
+recursos/datos/productos.json
+
