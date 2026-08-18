@@ -18,14 +18,14 @@ try {
         contenedor.innerHTML += `
           <article class="producto">
             <h3 class="nombre">${producto.nombre}</h3>
-            <data class="precio" value="${producto.precio}">Precio: $${producto.precio}</data>
-            <data class="stock" value="${producto.stock}">Stock: ${producto.stock}</data>
+            <p class="precio" value="${producto.precio}">Precio: $${producto.precio}</p>
+            <p class="stock" value="${producto.stock}">Stock: ${producto.stock}</p>
           </article>
         `;
       });
 
       //Sumamos el mensaje de éxito
-      contenedor.innerHTML += '<p class="mensaje exito">¡Productos cargados con éxito!</p>';
+      contenedor.innerHTML += '<p class="mensajeExito">¡Productos cargados con éxito!</p>';
 
     } else {
       // Mensaje de error si la respuesta no fue satisfactoria
