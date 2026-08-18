@@ -6,14 +6,13 @@ try {
   // Hace una petición asíncrona para obtener el archivo JSON
   const respuesta = await fetch('recursos/datos/productos.json');
 
-    // Comprobamos si la respuesta del servidor es correcta
+    // Comprueba si la respuesta del servidor es correcta
     if (respuesta.ok) {
       const productos = await respuesta.json();
 
-      // Limpiamos la plantilla estática que viene en el HTML
       contenedor.innerHTML = '';
 
-      //Recorremos y sumamos cada tarjeta al contenedor 
+      //Recorre y suma cada tarjeta al contenedor 
       productos.forEach(producto => {
         contenedor.innerHTML += `
           <article class="producto">
@@ -24,7 +23,7 @@ try {
         `;
       });
 
-      //Sumamos el mensaje de éxito
+      //Suma el mensaje de éxito
       contenedor.innerHTML += '<p class="mensajeExito">¡Productos cargados con éxito!</p>';
 
     } else {
@@ -47,7 +46,7 @@ obtenerDatos();
 //ACTIVIDAD 1
 //Aplicaciones Web 2
 //En esta web simple, deberá implementar un script cuya acción sea cargar, vía función global fetch,
-//  un JSON y lo renderice en el documento HTML.
+//un JSON y lo renderice en el documento HTML.
 //Desarrollar:
 //El script debe ser una función llamada obtenerDatos() asíncrona. El uso de fetch debe implementarse con el async/await.
 //Renderizar los datos en el documento HTML.
