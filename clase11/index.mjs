@@ -19,6 +19,6 @@ app.get('/estado',(req,res)=>{
  })
  
 app.post('/estado',(req,res)=>{
-    datos.push(rwq.body)
+    datos.push(req.body)
     res.json(datos)
  })
