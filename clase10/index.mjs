@@ -6,9 +6,10 @@ const app = express()
 app.listen(PUERTO)
 
 //middlewere static
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(express.json()/*parceamos los datos en formato json*/)
+app.use(express.urlencoded({extended: true}))//via formulario enctype
 app.use(express.static('./web'))
+app.use('saludo',midd1)//statico 
 
 app.get('/',(req,res)=>{
     console.log('estamos en raiz')
