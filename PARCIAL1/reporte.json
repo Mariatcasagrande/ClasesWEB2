@@ -1,0 +1,50 @@
+{
+  "proceso": "Reporte generado automáticamente por Middleware",
+  "fecha": "2026-10-01T18:53:54.215Z",
+  "totalProductos": 7,
+  "valorTotal": 782900,
+  "detalle": [
+    {
+      "nombre": "Pan Francés",
+      "categoria": "Panadería",
+      "stock": 10,
+      "subtotal": 45000
+    },
+    {
+      "nombre": "Medialunas de Manteca",
+      "categoria": "Facturas",
+      "stock": 24,
+      "subtotal": 144000
+    },
+    {
+      "nombre": "Criollos de Hojaldre",
+      "categoria": "Panadería",
+      "stock": 15,
+      "subtotal": 78000
+    },
+    {
+      "nombre": "Pastafrola",
+      "categoria": "Pastelería",
+      "stock": 5,
+      "subtotal": 42500
+    },
+    {
+      "nombre": "Cañoncitos de Dulce de Leche",
+      "categoria": "Facturas",
+      "stock": 18,
+      "subtotal": 117000
+    },
+    {
+      "nombre": "Alfajores de Maicena",
+      "categoria": "Pastelería",
+      "stock": 12,
+      "subtotal": 86400
+    },
+    {
+      "nombre": "Chipa de Queso",
+      "categoria": "Panadería",
+      "stock": 30,
+      "subtotal": 270000
+    }
+  ]
+}

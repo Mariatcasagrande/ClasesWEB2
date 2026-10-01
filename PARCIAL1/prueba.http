@@ -1,0 +1,11 @@
+### 1. Consultar todos los productos (Punto 1)
+GET http://localhost:3000/productos
+
+### 2. Consultar un producto por ID existente (Punto 1)
+GET http://localhost:3000/productos/2
+
+### 3. Consultar un producto por ID inexistente (Devuelve 404)
+GET http://localhost:3000/productos/999
+
+### 4. Ejecutar procedimiento y generar reporte (Puntos 2 y 3)
+GET http://localhost:3000/procedimiento/balance

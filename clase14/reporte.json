@@ -1,0 +1,53 @@
+{
+  "proceso": "Cálculo de balance y valuación de inventario",
+  "fechaGeneracion": "2026-10-01T14:42:40.968Z",
+  "resultado": {
+    "totalVariedadProductos": 7,
+    "totalUnidadesEnStock": 114,
+    "valorTotalInventario": 782900,
+    "detallePorProducto": [
+      {
+        "nombre": "Pan Francés",
+        "categoria": "Panadería",
+        "stock": 10,
+        "subtotalValor": 45000
+      },
+      {
+        "nombre": "Medialunas de Manteca",
+        "categoria": "Facturas",
+        "stock": 24,
+        "subtotalValor": 144000
+      },
+      {
+        "nombre": "Criollos de Hojaldre",
+        "categoria": "Panadería",
+        "stock": 15,
+        "subtotalValor": 78000
+      },
+      {
+        "nombre": "Pastafrola",
+        "categoria": "Pastelería",
+        "stock": 5,
+        "subtotalValor": 42500
+      },
+      {
+        "nombre": "Cañoncitos de Dulce de Leche",
+        "categoria": "Facturas",
+        "stock": 18,
+        "subtotalValor": 117000
+      },
+      {
+        "nombre": "Alfajores de Maicena",
+        "categoria": "Pastelería",
+        "stock": 12,
+        "subtotalValor": 86400
+      },
+      {
+        "nombre": "Chipa de Queso",
+        "categoria": "Panadería",
+        "stock": 30,
+        "subtotalValor": 270000
+      }
+    ]
+  }
+}
