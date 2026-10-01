@@ -35,7 +35,7 @@ export const guardarReporte = async (req, res, next) => {
     };
 
     // Guarda el archivo físico en el servidor:
-    //    JSON.stringify(..., null, 2) convierte el objeto a texto con formato legible/indentado,
+    //    JSON.stringify convierte el objeto a texto con formato legible/indentado,
     //    y fsp.writeFile escribe o sobreescribe 'reporte.json' de manera asíncrona
     await fsp.writeFile(rutaReporte, JSON.stringify(reporte, null, 2), 'utf-8');
 
