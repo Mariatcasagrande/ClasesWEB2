@@ -28,7 +28,6 @@ export const guardarReporte = async (req, res, next) => {
     //Construye el objeto final
     const reporte = {
       proceso: 'Reporte generado automáticamente por Middleware',
-      fecha: new Date().toISOString(),
       totalProductos: productos.length,
       valorTotal: totalDinero,
       detalle: detalle
