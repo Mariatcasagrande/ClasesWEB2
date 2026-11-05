@@ -79,37 +79,40 @@
             </label>
             <br />
             <button type="submit">Ingresar</button>
+            <br />
+            <a href="alta.html">Registrarse</a>
         </form>
-        <script>
-            // const form = document.getElementById('form');
-            // form.addEventListener('submit', (event) => {
-            //     event.preventDefault(); // Prevent the form from submitting normally
+        <!-- <script>
+            const form = document.getElementById('form');
+            form.addEventListener('submit', (event) => {
+                event.preventDefault(); // Prevent the form from submitting normally
 
-            //     const usuario = document.getElementById('usuario').value;
-            //     const pass = document.getElementById('pass').value;
-            //     // Indicamos la ruta relativa a la raiz del servidor
-            //     // El navegador agrega el dominio y el puerto
-            //     // Por ejemplo: http://localhost:3000/autenticacion
-            //     fetch('/autenticacion', {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //         },
-            //         body: JSON.stringify({ usuario, pass }),
-            //     }).then((response) => {
-            //         if (!response.ok) {
-            //             console.log('Error');
-            //             alert('Credenciales no válidas')
-            //             form.reset()
-            //         } else {
-            //             // Si es con fetch hay que redireccionar manualmente
-            //             if (response.redirected) {
-            //                 window.location.href = response.url;
-            //             }
-            //             console.log('datos enviados');
-            //         }
-            //     });
-            // });
-        </script>
+                const usuario = document.getElementById('usuario').value;
+                const pass = document.getElementById('pass').value;
+                // Indicamos la ruta relativa a la raiz del servidor
+                // El navegador agrega el dominio y el puerto
+                // Por ejemplo: http://localhost:3000/autenticacion
+                fetch('/autenticacion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ usuario, pass }),
+                }).then((response) => {
+                    if (!response.ok) {
+                        console.log('Error');
+                        alert('Credenciales no válidas')
+                        form.reset()
+                    } else {
+                        // Si es con fetch hay que redireccionar manualmente
+                        if (response.redirected) {
+                            window.location.href = response.url;
+                        }
+                        console.log('datos enviados');
+                    }
+                });
+            });
+        </script> -->
     </body>
 </html>
+

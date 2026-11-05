@@ -1,61 +1,112 @@
 import express from 'express'
-import dotenv from 'dotenv'
 import path from 'node:path'
+import { randomUUID } from 'node:crypto'
 import cookieParser from 'cookie-parser'
+import bcrypt from 'bcryptjs'
+import dotenv from 'dotenv'
+import pool from './conexion.bd.mjs'
 
-const tablaUsuarios = {
-    nombre: 'admin',
-    pass: '123456'
+dotenv.config()
+
+const PUERTO = Number(process.env.PUERTO || 3000)
+const sessionSecret = process.env.SESSION_SECRET
+
+if (!sessionSecret) {
+    throw new Error('Falta configurar SESSION_SECRET en el archivo .env')
 }
 
-const PUERTO = 3000
 const app = express()
 
-app.listen(PUERTO)
-app.use(express.urlencoded({extended:true}))
-app.use(cookieParser())
+app.use(cookieParser(sessionSecret))
+app.use(express.urlencoded({ extended: true }))
 
-app.post('/autenticacion' ,(req,res)=>{
-    console.log(req.body)
-    // Asignación desestructurante
-    const {usuario, pass} = req.body // Saco los datos del usuario y contraseña que vienen del body
-    if(usuario === tablaUsuarios.nombre && pass === tablaUsuarios.pass){
-        // Creamos la cookie
-        res.cookie('sesionId',123456,{
-            httpOnly: true,
-            secure: true,
-            sameSite: 'lax',
-            maxAge: 10
-        })
-        return res.redirect('/admin')
+app.post('/autenticacion', async (req, res) => {
+    const { usuario, pass } = req.body
+
+    if (typeof usuario !== 'string' || typeof pass !== 'string' || !usuario.trim() || !pass) {
+        return res.redirect('/login?usuarioincorrecto')
     }
-    // El redirect viene con un status de 302
-    res.redirect('/login')
 
+    const resultado = await pool.query(
+        'SELECT id, password_hash FROM usuarios WHERE username = $1',
+        [usuario.trim()]
+    )
+    const usuarioEncontrado = resultado.rows[0]
+
+    if (!usuarioEncontrado || !(await bcrypt.compare(pass, usuarioEncontrado.password_hash))) {
+        return res.redirect('/login?usuarioincorrecto')
+    }
+
+    const sesionId = randomUUID()
+    await pool.query('UPDATE usuarios SET session_id = $1 WHERE id = $2', [
+        sesionId,
+        usuarioEncontrado.id,
+    ])
+
+    res.cookie('sesionId', sesionId, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        signed: true,
+        maxAge: 1000 * 60 * 60 * 24,
+    })
+    return res.redirect('/admin')
 })
-app.post('/registrar' ,async (req,res)=>{
-    console.log(req.body)
-    // Asignación desestructurante
-    const {usuario, pass} = req.body 
-    // chequear los datos
-    //insertamos en tabla--hashing de claves
 
-    const salt = await bcrypt.genSalt(10);
-    const clave_hasheada = await bcrypt.hash(pass, salt);
-    console.log(clave_hasheada)
+app.post('/registrar', async (req, res) => {
+    const { usuario, pass } = req.body
 
-    res.redirect('/login')
+    if (typeof usuario !== 'string' || typeof pass !== 'string' || !usuario.trim() || !pass) {
+        return res.redirect('/login?errorregistrando')
+    }
 
+    try {
+        const claveHasheada = await bcrypt.hash(pass, 10)
+        await pool.query(
+            'INSERT INTO usuarios(username, password_hash) VALUES ($1, $2)',
+            [usuario.trim(), claveHasheada]
+        )
+        return res.redirect('/login?usuarioregistrado')
+    } catch (error) {
+        console.error('Error al registrar el usuario:', error)
+        return res.redirect('/login?errorregistrando')
+    }
 })
-// Estáticos
-function verificarCookie(req, res, next){
-    console.log(req.signedCookies)
-    if(req.cookies.sesionId === '123456'){
+
+async function verificarCookie(req, res, next) {
+    const sesionId = req.signedCookies.sesionId
+
+    if (!sesionId) {
+        return res.redirect('/login?autorizado=false')
+    }
+
+    try {
+        const resultado = await pool.query(
+            'SELECT id FROM usuarios WHERE session_id = $1',
+            [sesionId]
+        )
+
+        if (resultado.rows.length === 0) {
+            return res.redirect('/login?autorizado=false')
+        }
+
         return next()
+    } catch (error) {
+        return next(error)
     }
-    res.redirect('/login?autorizado=false')
 }
 
-
 app.use('/admin', verificarCookie, express.static(path.resolve('./front')))
-app.use('/login' ,express.static(path.resolve('./login')))
+app.use('/login', express.static(path.resolve('./login')))
+
+app.use((error, req, res, next) => {
+    console.error('Error en la aplicación:', error)
+    if (res.headersSent) {
+        return next(error)
+    }
+    return res.status(500).send('Error interno del servidor')
+})
+
+app.listen(PUERTO, () => {
+    console.log(`Servidor escuchando en http://localhost:${PUERTO}`)
+})
