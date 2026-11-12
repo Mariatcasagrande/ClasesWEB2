@@ -1,0 +1,20 @@
+### Login
+POST http://localhost:3000/autenticacion
+Content-Type: application/x-www-form-urlencoded
+
+usuario=admin&pass=admin123
+
+### Lista de productos
+GET http://localhost:3000/api/v1/productos
+
+### Producto por id
+GET http://localhost:3000/api/v1/productos/1
+
+### Producto inexistente
+GET http://localhost:3000/api/v1/productos/999
+
+### Id inválido
+GET http://localhost:3000/api/v1/productos/abc
+
+### Procedimiento de balance
+GET http://localhost:3000/api/v1/procedimiento/balance

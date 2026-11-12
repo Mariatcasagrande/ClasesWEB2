@@ -1,9 +1,4 @@
 <!DOCTYPE html>
-<!--
-    Página de detalle de un ítem.
-    Se sirve en /app/item/item.html?id=N y está protegida por protegerPaginas.
-    item.mjs lee el id de la query string y consulta /api/v1/productos/:id.
--->
 <html lang="es">
     <head>
         <meta charset="UTF-8" />
@@ -12,26 +7,74 @@
         <link rel="stylesheet" href="/estilos.css" />
     </head>
     <body>
-        <nav id="menu" class="menu" aria-label="Menú principal"></nav>
+        <nav class="menu">
+            <ul>
+                <li><a href="/app/items/items.html">Ítems</a></li>
+                <li><a href="/app/procedimiento/procedimiento.html">Procedimiento</a></li>
+                <li><a href="/cerrar-sesion">Cerrar sesión</a></li>
+            </ul>
+        </nav>
 
         <main class="contenedor">
             <p><a href="/app/items/items.html">← Volver al listado</a></p>
 
-            <h1 id="titulo-item">Detalle del ítem</h1>
-            <p class="descripcion">
-                Datos obtenidos desde <code>GET /api/v1/productos/:id</code> usando el
-                id recibido por query string.
-            </p>
+            <h1 id="titulo">Detalle del ítem</h1>
 
-            <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
+            <p id="mensaje" class="mensaje"></p>
 
             <section class="tarjeta">
                 <dl id="detalle" class="detalle"></dl>
             </section>
         </main>
 
-        <!-- menu.mjs está en la carpeta padre; item.mjs está en esta carpeta. -->
-        <script type="module" src="../menu.mjs"></script>
-        <script type="module" src="item.mjs"></script>
+        <script>
+            const id = new URLSearchParams(window.location.search).get('id')
+            const titulo = document.querySelector('#titulo')
+            const detalle = document.querySelector('#detalle')
+            const mensaje = document.querySelector('#mensaje')
+
+            async function cargarItem() {
+                if (!id) {
+                    mensaje.textContent = 'Falta el id en la URL.'
+                    return
+                }
+
+                const respuesta = await fetch(`/api/v1/productos/${id}`)
+
+                if (respuesta.status === 401) {
+                    window.location.href = '/login?error=sinsesion'
+                    return
+                }
+
+                const datos = await respuesta.json()
+
+                if (!respuesta.ok) {
+                    mensaje.textContent = datos.error
+                    return
+                }
+
+                titulo.textContent = datos.nombre
+
+                const filas = [
+                    ['ID', datos.id],
+                    ['Nombre', datos.nombre],
+                    ['Categoría', datos.categoria],
+                    ['Precio', datos.precio],
+                    ['Stock', datos.stock],
+                ]
+
+                for (const [etiqueta, valor] of filas) {
+                    const termino = document.createElement('dt')
+                    termino.textContent = etiqueta
+
+                    const definicion = document.createElement('dd')
+                    definicion.textContent = valor
+
+                    detalle.append(termino, definicion)
+                }
+            }
+
+            cargarItem()
+        </script>
     </body>
 </html>

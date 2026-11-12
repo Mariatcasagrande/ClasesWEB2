@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Iniciar sesión · Parcial 2</title>
+        <link rel="stylesheet" href="/estilos.css" />
+    </head>
+    <body class="pagina-login">
+        <nav class="menu">
+            <ul>
+                <li><a href="/login">Iniciar sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="contenedor">
+            <section class="tarjeta">
+                <h1>Iniciar sesión</h1>
+
+                <p id="mensaje" class="mensaje"></p>
+
+                <form class="formulario" action="/autenticacion" method="post">
+                    <label>
+                        Usuario
+                        <input type="text" name="usuario" required />
+                    </label>
+
+                    <label>
+                        Contraseña
+                        <input type="password" name="pass" required />
+                    </label>
+
+                    <button class="boton" type="submit">Ingresar</button>
+                </form>
+
+                <p class="ayuda">Usuario: admin · Contraseña: admin123</p>
+            </section>
+        </main>
+
+        <script>
+            const mensaje = document.querySelector('#mensaje')
+            const error = new URLSearchParams(window.location.search).get('error')
+
+            if (error === 'sinsesion') {
+                mensaje.textContent = 'Tenés que iniciar sesión.'
+            } else if (error === 'usuarioincorrecto') {
+                mensaje.textContent = 'Usuario o contraseña incorrectos.'
+            } else if (error === 'errorjwt') {
+                mensaje.textContent = 'No se pudo iniciar sesión.'
+            }
+
+            document.querySelector('input[name="usuario"]').focus()
+        </script>
+    </body>
+</html>

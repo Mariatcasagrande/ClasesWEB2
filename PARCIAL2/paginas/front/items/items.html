@@ -1,9 +1,4 @@
 <!DOCTYPE html>
-<!--
-    Página de listado de ítems.
-    Se sirve en /app/items/items.html y está protegida por protegerPaginas.
-    El contenido lo genera items.mjs a partir de GET /api/v1/productos.
--->
 <html lang="es">
     <head>
         <meta charset="UTF-8" />
@@ -12,25 +7,58 @@
         <link rel="stylesheet" href="/estilos.css" />
     </head>
     <body>
-        <!-- El menú compartido se construye desde ../menu.mjs. -->
-        <nav id="menu" class="menu" aria-label="Menú principal"></nav>
+        <nav class="menu">
+            <ul>
+                <li><a href="/app/items/items.html">Ítems</a></li>
+                <li><a href="/app/procedimiento/procedimiento.html">Procedimiento</a></li>
+                <li><a href="/cerrar-sesion">Cerrar sesión</a></li>
+            </ul>
+        </nav>
 
         <main class="contenedor">
             <h1>Ítems</h1>
-            <p class="descripcion">
-                Listado obtenido desde <code>GET /api/v1/productos</code>. Hacé clic
-                en un ítem para ver su detalle.
-            </p>
 
-            <p id="mensaje" class="mensaje visible info" role="status" aria-live="polite">
-                Cargando ítems...
-            </p>
+            <p id="mensaje" class="mensaje">Cargando...</p>
 
-            <ul id="lista-items" class="lista-items" aria-live="polite"></ul>
+            <ul id="lista" class="lista"></ul>
         </main>
 
-        <!-- menu.mjs está en la carpeta padre; items.mjs está en esta carpeta. -->
-        <script type="module" src="../menu.mjs"></script>
-        <script type="module" src="items.mjs"></script>
+        <script>
+            const lista = document.querySelector('#lista')
+            const mensaje = document.querySelector('#mensaje')
+
+            async function cargarItems() {
+                const respuesta = await fetch('/api/v1/productos')
+
+                if (respuesta.status === 401) {
+                    window.location.href = '/login?error=sinsesion'
+                    return
+                }
+
+                const datos = await respuesta.json()
+
+                if (!respuesta.ok) {
+                    mensaje.textContent = datos.error
+                    return
+                }
+
+                mensaje.textContent = ''
+
+                for (const producto of datos) {
+                    const enlace = document.createElement('a')
+                    enlace.href = `/app/item/item.html?id=${producto.id}`
+                    enlace.textContent = producto.nombre
+
+                    const detalle = document.createElement('span')
+                    detalle.textContent = `${producto.categoria} · $${producto.precio} · stock: ${producto.stock}`
+
+                    const item = document.createElement('li')
+                    item.append(enlace, detalle)
+                    lista.append(item)
+                }
+            }
+
+            cargarItems()
+        </script>
     </body>
 </html>

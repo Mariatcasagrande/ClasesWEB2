@@ -1,10 +1,4 @@
 <!DOCTYPE html>
-<!--
-    Página del procedimiento.
-    Se sirve en /app/procedimiento/procedimiento.html y está protegida por
-    protegerPaginas. procedimiento.mjs ejecuta
-    GET /api/v1/procedimiento/balance y muestra el resultado y el detalle.
--->
 <html lang="es">
     <head>
         <meta charset="UTF-8" />
@@ -13,56 +7,131 @@
         <link rel="stylesheet" href="/estilos.css" />
     </head>
     <body>
-        <nav id="menu" class="menu" aria-label="Menú principal"></nav>
+        <nav class="menu">
+            <ul>
+                <li><a href="/app/items/items.html">Ítems</a></li>
+                <li><a href="/app/procedimiento/procedimiento.html">Procedimiento</a></li>
+                <li><a href="/cerrar-sesion">Cerrar sesión</a></li>
+            </ul>
+        </nav>
 
         <main class="contenedor">
             <h1>Procedimiento de balance</h1>
 
-            <section class="tarjeta">
+            <section class="tarjeta explicacion">
                 <h2>¿Qué hace este procedimiento?</h2>
                 <p>
-                    Ejecuta la función almacenada
-                    <code>generar_reporte_balance()</code> definida en PostgreSQL.
-                    El procedimiento recorre todos los productos, calcula el subtotal
-                    de cada uno (<code>precio × stock</code>), obtiene el valor total
-                    del inventario y guarda el reporte en la tabla
-                    <code>reportes</code> junto con la fecha de ejecución.
+                    Ejecuta la función <code>generar_reporte_balance()</code> definida
+                    en PostgreSQL.
                 </p>
-                <p class="descripcion">
-                    Al presionar el botón, la página muestra los datos devueltos por
-                    la API.
-                </p>
+
+                <ol class="pasos">
+                    <li>Recorre todos los productos de la tabla <code>productos</code>.</li>
+                    <li>Calcula el subtotal de cada uno: <code>precio × stock</code>.</li>
+                    <li>Suma el valor total del inventario.</li>
+                    <li>Guarda el reporte en la tabla <code>reportes</code>.</li>
+                    <li>Devuelve el resultado en JSON para mostrarlo en esta página.</li>
+                </ol>
             </section>
 
             <div class="acciones">
-                <button id="boton-procedimiento" class="boton" type="button">
+                <button id="boton" class="boton" type="button">
                     Ejecutar procedimiento
                 </button>
             </div>
 
-            <p id="estado" class="mensaje" role="status" aria-live="polite"></p>
+            <p id="estado" class="mensaje"></p>
+
+            <section id="resumen" class="resumen oculto">
+                <div class="dato">
+                    <span>Total de productos</span>
+                    <strong id="total-productos">0</strong>
+                </div>
+                <div class="dato">
+                    <span>Valor total del inventario</span>
+                    <strong id="valor-total">$ 0</strong>
+                </div>
+            </section>
 
             <section class="tarjeta">
                 <h2>Datos devueltos</h2>
                 <pre id="resultado">Todavía no se ejecutó el procedimiento.</pre>
 
-                <table id="tabla-detalle" class="tabla oculto">
-                    <caption>Detalle por producto</caption>
+                <table id="tabla" class="tabla oculto">
                     <thead>
                         <tr>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Categoría</th>
-                            <th scope="col">Stock</th>
-                            <th scope="col">Subtotal</th>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Stock</th>
+                            <th>Subtotal</th>
                         </tr>
                     </thead>
-                    <tbody id="cuerpo-detalle"></tbody>
+                    <tbody id="cuerpo"></tbody>
                 </table>
             </section>
         </main>
 
-        <!-- menu.mjs está en la carpeta padre; procedimiento.mjs está acá. -->
-        <script type="module" src="../menu.mjs"></script>
-        <script type="module" src="procedimiento.mjs"></script>
+        <script>
+            const boton = document.querySelector('#boton')
+            const estado = document.querySelector('#estado')
+            const resultado = document.querySelector('#resultado')
+            const tabla = document.querySelector('#tabla')
+            const cuerpo = document.querySelector('#cuerpo')
+            const resumen = document.querySelector('#resumen')
+            const totalProductos = document.querySelector('#total-productos')
+            const valorTotal = document.querySelector('#valor-total')
+
+            boton.addEventListener('click', async () => {
+                boton.disabled = true
+                estado.textContent = 'Ejecutando...'
+                resultado.textContent = ''
+                cuerpo.replaceChildren()
+                tabla.classList.add('oculto')
+                resumen.classList.add('oculto')
+
+                const respuesta = await fetch('/api/v1/procedimiento/balance')
+
+                if (respuesta.status === 401) {
+                    window.location.href = '/login?error=sinsesion'
+                    return
+                }
+
+                const datos = await respuesta.json()
+
+                if (!respuesta.ok) {
+                    estado.textContent = datos.error
+                    boton.disabled = false
+                    return
+                }
+
+                estado.textContent = ''
+                resultado.textContent = JSON.stringify(datos.resultado, null, 2)
+
+                totalProductos.textContent = datos.resultado.totalProductos
+                valorTotal.textContent = `$ ${Number(datos.resultado.valorTotal).toLocaleString('es-AR')}`
+                resumen.classList.remove('oculto')
+
+                for (const fila of datos.resultado.detalle) {
+                    const tr = document.createElement('tr')
+                    const valores = [
+                        fila.nombre,
+                        fila.categoria,
+                        fila.stock,
+                        `$ ${Number(fila.subtotal).toLocaleString('es-AR')}`,
+                    ]
+
+                    for (const valor of valores) {
+                        const td = document.createElement('td')
+                        td.textContent = valor
+                        tr.append(td)
+                    }
+
+                    cuerpo.append(tr)
+                }
+
+                tabla.classList.remove('oculto')
+                boton.disabled = false
+            })
+        </script>
     </body>
 </html>
