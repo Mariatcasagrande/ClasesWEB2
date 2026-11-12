@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!--
+    Página de detalle de un ítem.
+    Se sirve en /app/item/item.html?id=N y está protegida por protegerPaginas.
+    item.mjs lee el id de la query string y consulta /api/v1/productos/:id.
+-->
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Detalle del ítem · Parcial 2</title>
+        <link rel="stylesheet" href="/estilos.css" />
+    </head>
+    <body>
+        <nav id="menu" class="menu" aria-label="Menú principal"></nav>
+
+        <main class="contenedor">
+            <p><a href="/app/items/items.html">← Volver al listado</a></p>
+
+            <h1 id="titulo-item">Detalle del ítem</h1>
+            <p class="descripcion">
+                Datos obtenidos desde <code>GET /api/v1/productos/:id</code> usando el
+                id recibido por query string.
+            </p>
+
+            <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
+
+            <section class="tarjeta">
+                <dl id="detalle" class="detalle"></dl>
+            </section>
+        </main>
+
+        <!-- menu.mjs está en la carpeta padre; item.mjs está en esta carpeta. -->
+        <script type="module" src="../menu.mjs"></script>
+        <script type="module" src="item.mjs"></script>
+    </body>
+</html>

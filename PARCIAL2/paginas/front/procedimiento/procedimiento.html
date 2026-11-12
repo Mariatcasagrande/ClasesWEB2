@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!--
+    Página del procedimiento.
+    Se sirve en /app/procedimiento/procedimiento.html y está protegida por
+    protegerPaginas. procedimiento.mjs ejecuta
+    GET /api/v1/procedimiento/balance y muestra el resultado y el detalle.
+-->
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Procedimiento · Parcial 2</title>
+        <link rel="stylesheet" href="/estilos.css" />
+    </head>
+    <body>
+        <nav id="menu" class="menu" aria-label="Menú principal"></nav>
+
+        <main class="contenedor">
+            <h1>Procedimiento de balance</h1>
+
+            <section class="tarjeta">
+                <h2>¿Qué hace este procedimiento?</h2>
+                <p>
+                    Ejecuta la función almacenada
+                    <code>generar_reporte_balance()</code> definida en PostgreSQL.
+                    El procedimiento recorre todos los productos, calcula el subtotal
+                    de cada uno (<code>precio × stock</code>), obtiene el valor total
+                    del inventario y guarda el reporte en la tabla
+                    <code>reportes</code> junto con la fecha de ejecución.
+                </p>
+                <p class="descripcion">
+                    Al presionar el botón, la página muestra los datos devueltos por
+                    la API.
+                </p>
+            </section>
+
+            <div class="acciones">
+                <button id="boton-procedimiento" class="boton" type="button">
+                    Ejecutar procedimiento
+                </button>
+            </div>
+
+            <p id="estado" class="mensaje" role="status" aria-live="polite"></p>
+
+            <section class="tarjeta">
+                <h2>Datos devueltos</h2>
+                <pre id="resultado">Todavía no se ejecutó el procedimiento.</pre>
+
+                <table id="tabla-detalle" class="tabla oculto">
+                    <caption>Detalle por producto</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Categoría</th>
+                            <th scope="col">Stock</th>
+                            <th scope="col">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpo-detalle"></tbody>
+                </table>
+            </section>
+        </main>
+
+        <!-- menu.mjs está en la carpeta padre; procedimiento.mjs está acá. -->
+        <script type="module" src="../menu.mjs"></script>
+        <script type="module" src="procedimiento.mjs"></script>
+    </body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!--
+    Página de listado de ítems.
+    Se sirve en /app/items/items.html y está protegida por protegerPaginas.
+    El contenido lo genera items.mjs a partir de GET /api/v1/productos.
+-->
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ítems · Parcial 2</title>
+        <link rel="stylesheet" href="/estilos.css" />
+    </head>
+    <body>
+        <!-- El menú compartido se construye desde ../menu.mjs. -->
+        <nav id="menu" class="menu" aria-label="Menú principal"></nav>
+
+        <main class="contenedor">
+            <h1>Ítems</h1>
+            <p class="descripcion">
+                Listado obtenido desde <code>GET /api/v1/productos</code>. Hacé clic
+                en un ítem para ver su detalle.
+            </p>
+
+            <p id="mensaje" class="mensaje visible info" role="status" aria-live="polite">
+                Cargando ítems...
+            </p>
+
+            <ul id="lista-items" class="lista-items" aria-live="polite"></ul>
+        </main>
+
+        <!-- menu.mjs está en la carpeta padre; items.mjs está en esta carpeta. -->
+        <script type="module" src="../menu.mjs"></script>
+        <script type="module" src="items.mjs"></script>
+    </body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Iniciar sesión · Parcial 2</title>
+        <link rel="stylesheet" href="/estilos.css" />
+    </head>
+    <body class="pagina-login">
+        <nav id="menu" class="menu" aria-label="Menú principal">
+            <ul>
+                <li><a href="/login" aria-current="page">Iniciar sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="contenedor">
+            <section class="tarjeta">
+                <h1>Iniciar sesión</h1>
+                <p class="descripcion">
+                    Ingresá con tu usuario y contraseña para acceder al panel.
+                </p>
+
+                <!-- El backend redirige aquí con ?error=... si el login falla. -->
+                <p id="mensaje" class="mensaje" role="alert"></p>
+
+                <form id="form" class="formulario" action="/autenticacion" method="post">
+                    <label for="usuario">
+                        Usuario
+                        <input
+                            type="text"
+                            id="usuario"
+                            name="usuario"
+                            autocomplete="username"
+                            required
+                        />
+                    </label>
+
+                    <label for="pass">
+                        Contraseña
+                        <input
+                            type="password"
+                            id="pass"
+                            name="pass"
+                            autocomplete="current-password"
+                            required
+                        />
+                    </label>
+
+                    <button class="boton" type="submit">Ingresar</button>
+                </form>
+
+                <p class="ayuda">
+                    Credenciales de prueba: <code>admin</code> / <code>admin123</code>
+                </p>
+            </section>
+        </main>
+
+        <script type="module" src="/login/login.mjs"></script>
+    </body>
+</html>
