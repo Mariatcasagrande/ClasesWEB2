@@ -2,11 +2,9 @@ import { ejecutarBalance } from './procedimientos.modelo.mjs'
 import { mostrarResultado } from './procedimientos.vista.mjs'
 
 // GET /api/v1/procedimiento/balance
-export async function obtenerBalance(req, res, next) {
-    try {
-        const resultado = await ejecutarBalance()
+export function obtenerBalance(req, res, next) {
+    ejecutarBalance((error, resultado) => {
+        if (error) return next(error)
         return mostrarResultado(res, resultado)
-    } catch (error) {
-        next(error)
-    }
+    })
 }
