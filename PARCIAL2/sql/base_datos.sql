@@ -34,12 +34,6 @@ INSERT INTO productos (id, nombre, categoria, precio, stock) VALUES
     (7, 'Chipa de Queso', 'Panadería', 9000.00, 30)
 ON CONFLICT (id) DO NOTHING;
 
--- Ajusta la secuencia después de insertar ids manualmente.
-SELECT setval(
-    pg_get_serial_sequence('productos', 'id'),
-    COALESCE((SELECT MAX(id) FROM productos), 1)
-);
-
 -- Reportes generados por el procedimiento
 CREATE TABLE IF NOT EXISTS reportes (
     id              SERIAL PRIMARY KEY,
@@ -48,47 +42,3 @@ CREATE TABLE IF NOT EXISTS reportes (
     detalle         JSONB NOT NULL,
     ejecutado_en    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
--- Procedimiento que ejecuta /api/v1/procedimiento/balance
-CREATE OR REPLACE FUNCTION generar_reporte_balance()
-RETURNS JSONB
-LANGUAGE plpgsql
-AS $$
-DECLARE
-    v_total_productos INTEGER;
-    v_valor_total     NUMERIC(14, 2);
-    v_detalle         JSONB;
-BEGIN
-    -- Totales del inventario.
-    SELECT COUNT(*), COALESCE(SUM(precio * stock), 0)
-      INTO v_total_productos, v_valor_total
-      FROM productos;
-
-    -- Detalle por producto.
-    SELECT COALESCE(
-               jsonb_agg(
-                   jsonb_build_object(
-                       'nombre',    nombre,
-                       'categoria', categoria,
-                       'stock',     stock,
-                       'subtotal',  precio * stock
-                   )
-                   ORDER BY id
-               ),
-               '[]'::jsonb
-           )
-      INTO v_detalle
-      FROM productos;
-
-    -- Guarda el reporte y lo devuelve.
-    INSERT INTO reportes (total_productos, valor_total, detalle)
-    VALUES (v_total_productos, v_valor_total, v_detalle);
-
-    RETURN jsonb_build_object(
-        'proceso',        'Reporte generado por generar_reporte_balance()',
-        'totalProductos', v_total_productos,
-        'valorTotal',     v_valor_total,
-        'detalle',        v_detalle
-    );
-END;
-$$;

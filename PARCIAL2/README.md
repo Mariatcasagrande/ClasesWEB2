@@ -15,9 +15,10 @@ HTML.
 
 Credenciales iniciales: `admin` / `admin123`.
 
-El SQL de `sql/base_datos.sql` crea las tablas, el usuario inicial y la función
-`generar_reporte_balance()`. Docker ejecuta ese script al crear el volumen por
-primera vez.
+El SQL de `sql/base_datos.sql` crea las tablas y carga los datos iniciales.
+Docker ejecuta ese script al crear el volumen por primera vez. Las consultas de
+la aplicación y el cálculo/guardado del reporte están en los modelos; al iniciar,
+el servidor sincroniza la secuencia de productos después de cargar los ids de ejemplo.
 
 ## Rutas principales
 

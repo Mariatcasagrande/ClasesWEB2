@@ -1,6 +1,4 @@
 // Opciones que comparten la creación y el borrado de la cookie.
-// No incluyo maxAge acá: clearCookie usa 'expires' para vencerlá y un maxAge
-// lo pisaría, dejando la cookie vacía pero viva por una hora.
 const opcionesCookie = {
     httpOnly: true,
     // En producción la cookie viaja solo por HTTPS. En desarrollo/localhost
@@ -19,7 +17,7 @@ export function mostrarSesionIniciada(res, token) {
     return res.redirect('/app/items/items.html')
 }
 
-// Borra la cookie con las mismas opciones base (sin maxAge) y vuelve al login.
+// Borra la cookie con las mismas opciones base y vuelve al login.
 export function mostrarSesionCerrada(res) {
     res.clearCookie('token', opcionesCookie)
     return res.redirect('/login')

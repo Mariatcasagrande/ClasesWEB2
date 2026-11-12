@@ -6,6 +6,7 @@ import path from 'node:path'
 import cookieParser from 'cookie-parser'
 import loginRouter from './modulos/login/login.rutas.mjs'
 import productosRouter from './modulos/productos/productos.rutas.mjs'
+import { sincronizarSecuenciaProductos } from './modulos/productos/productos.modelo.mjs'
 import procedimientosRouter from './modulos/procedimientos/procedimientos.rutas.mjs'
 import { protegerApi, protegerPaginas } from './seguridad/verificar-sesion.mjs'
 
@@ -70,6 +71,14 @@ app.use((req, res) => {
     return res.status(404).send('Página no encontrada.')
 })
 
-app.listen(PUERTO, () => {
-    console.log(`Servidor escuchando en el puerto ${PUERTO}`)
+sincronizarSecuenciaProductos((error) => {
+    if (error) {
+        console.error('No se pudo sincronizar la secuencia de productos:', error)
+        process.exitCode = 1
+        return
+    }
+
+    app.listen(PUERTO, () => {
+        console.log(`Servidor escuchando en el puerto ${PUERTO}`)
+    })
 })
