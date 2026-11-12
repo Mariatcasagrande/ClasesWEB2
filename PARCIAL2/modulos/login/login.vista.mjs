@@ -27,11 +27,16 @@ const opcionesBaseCookie = {
     signed: true,
 }
 
-// Al crear la cookie se agrega maxAge, calculado con la misma cantidad de
-// segundos que la expiración del JWT. Así cookie y token vencen juntos.
+// Duración de la cookie en milisegundos.
+// Se define en el código, no en .env, para que sea independiente de la
+// expiración del JWT. Para cambiarla, modificá este valor.
+// 1000 * 60 * 60 = 1 hora.
+const DURACION_COOKIE_MS = 1000 * 60 * 60
+
+// Al crear la cookie se agrega maxAge con esa duración.
 const opcionesCookie = {
     ...opcionesBaseCookie,
-    maxAge: 1000 * (Number(process.env.JWT_EXPIRACION_SEGUNDOS) || 3600),
+    maxAge: DURACION_COOKIE_MS,
 }
 
 // Guarda el token en la cookie y manda al listado de ítems.

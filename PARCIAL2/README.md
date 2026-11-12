@@ -61,7 +61,9 @@ El flujo es el mismo de la clase 21:
 2. Si es correcta, `jwt.sign` genera un token firmado con `CLAVE_PRIVADA` y con
    expiración (`JWT_EXPIRACION_SEGUNDOS`).
 3. El token se guarda en una cookie `httpOnly`, `sameSite: 'lax'`, con `maxAge`
-   y **firmada** con `CLAVE_COOKIE` (`signed: true`).
+   y **firmada** con `CLAVE_COOKIE` (`signed: true`). La duración de la cookie
+   se define en `login.vista.mjs` con la constante `DURACION_COOKIE_MS`
+   (1 hora), independiente de la expiración del JWT.
 4. `protegerPaginas` y `protegerApi` leen `req.signedCookies` y verifican el JWT
    con `jwt.verify`. Si la cookie fue alterada o el token venció, se rechaza.
 5. `/cerrar-sesion` borra la cookie y redirige al login.
