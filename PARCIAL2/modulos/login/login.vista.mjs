@@ -1,29 +1,31 @@
+// Opciones que comparten la creación y el borrado de la cookie.
+// No incluyo maxAge acá: clearCookie usa 'expires' para vencerlá y un maxAge
+// lo pisaría, dejando la cookie vacía pero viva por una hora.
 const opcionesCookie = {
     httpOnly: true,
-    secure: true,
+    // En producción la cookie viaja solo por HTTPS. En desarrollo/localhost
+    // queda en false para que el navegador la guarde también por HTTP.
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     signed: true,
-    maxAge: 1000 * 60 * 60, // Una hora.
 }
 
-// Guarda el token en la cookie y va al listado.
+// Guarda el token en una cookie firmada de una hora y redirige al listado.
 export function mostrarSesionIniciada(res, token) {
-    res.cookie('token', token, opcionesCookie)
+    res.cookie('token', token, {
+        ...opcionesCookie,
+        maxAge: 1000 * 60 * 60, // Una hora, igual que el expiresIn del JWT.
+    })
     return res.redirect('/app/items/items.html')
 }
 
-// Borra la cookie con las mismas opciones y vuelve al login.
+// Borra la cookie con las mismas opciones base (sin maxAge) y vuelve al login.
 export function mostrarSesionCerrada(res) {
     res.clearCookie('token', opcionesCookie)
     return res.redirect('/login')
 }
 
-// Vuelve al login con un motivo para mostrar el mensaje.
+// Vuelve al login con un motivo en la URL para que la vista muestre el mensaje.
 export function mostrarLogin(res, motivo) {
     return res.redirect(`/login?error=${motivo}`)
-}
-
-// Respuesta JSON para errores de la API.
-export function mostrarError(res, estado, mensaje) {
-    return res.status(estado).json({ error: mensaje })
 }

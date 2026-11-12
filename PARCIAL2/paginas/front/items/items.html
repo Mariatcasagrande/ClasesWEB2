@@ -23,42 +23,6 @@
             <ul id="lista" class="lista"></ul>
         </main>
 
-        <script>
-            const lista = document.querySelector('#lista')
-            const mensaje = document.querySelector('#mensaje')
-
-            async function cargarItems() {
-                const respuesta = await fetch('/api/v1/productos')
-
-                if (respuesta.status === 401) {
-                    window.location.href = '/login?error=sinsesion'
-                    return
-                }
-
-                const datos = await respuesta.json()
-
-                if (!respuesta.ok) {
-                    mensaje.textContent = datos.error
-                    return
-                }
-
-                mensaje.textContent = ''
-
-                for (const producto of datos) {
-                    const enlace = document.createElement('a')
-                    enlace.href = `/app/item/item.html?id=${producto.id}`
-                    enlace.textContent = producto.nombre
-
-                    const detalle = document.createElement('span')
-                    detalle.textContent = `${producto.categoria} · $${producto.precio} · stock: ${producto.stock}`
-
-                    const item = document.createElement('li')
-                    item.append(enlace, detalle)
-                    lista.append(item)
-                }
-            }
-
-            cargarItems()
-        </script>
+        <script type="module" src="/app/items/items.mjs"></script>
     </body>
 </html>

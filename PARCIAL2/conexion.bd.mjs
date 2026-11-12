@@ -1,8 +1,7 @@
 import { Pool } from 'pg'
-import dotenv from 'dotenv'
 
-dotenv.config()
-
+// Configuración de la conexión a PostgreSQL. Los datos salen de .env.
+// dotenv se carga una sola vez al inicio de index.mjs.
 const pool = new Pool({
     host: process.env.BD_HOST,
     user: process.env.BD_USER,

@@ -1,5 +1,6 @@
 import { buscarTodos, buscarPorId } from './productos.modelo.mjs'
-import { mostrarProductos, mostrarProducto, mostrarError } from './productos.vista.mjs'
+import { mostrarProductos, mostrarProducto } from './productos.vista.mjs'
+import { mostrarError } from '../../seguridad/respuestas.mjs'
 
 // GET /api/v1/productos
 export function obtenerProductos(req, res, next) {
@@ -11,9 +12,17 @@ export function obtenerProductos(req, res, next) {
 
 // GET /api/v1/productos/:id
 export function obtenerProductoPorId(req, res, next) {
-    const id = Number(req.params.id)
+    const textoId = req.params.id
 
-    if (!Number.isInteger(id) || id <= 0) {
+    // Solo acepto dígitos. Así descarto 'abc', '1.5' y también '1e2',
+    // que con Number() se convertiría en 100 y pasaría la validación.
+    if (!/^\d+$/.test(textoId)) {
+        return mostrarError(res, 400, 'El id debe ser un número entero positivo.')
+    }
+
+    const id = Number(textoId)
+
+    if (id <= 0) {
         return mostrarError(res, 400, 'El id debe ser un número entero positivo.')
     }
 

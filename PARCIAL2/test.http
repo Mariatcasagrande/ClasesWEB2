@@ -1,20 +1,46 @@
-### Login
-POST http://localhost:3000/autenticacion
+@baseUrl = http://localhost:3000
+
+### API protegida sin iniciar sesión (espera 401 JSON)
+GET {{baseUrl}}/api/v1/productos
+
+### Página protegida sin iniciar sesión (espera redirección al login)
+GET {{baseUrl}}/app/items/items.html
+
+### Login incorrecto (espera redirección al login con error)
+POST {{baseUrl}}/autenticacion
+Content-Type: application/x-www-form-urlencoded
+
+usuario=admin&pass=incorrecta
+
+### Login correcto (la cookie se conserva en las siguientes peticiones)
+POST {{baseUrl}}/autenticacion
 Content-Type: application/x-www-form-urlencoded
 
 usuario=admin&pass=admin123
 
-### Lista de productos
-GET http://localhost:3000/api/v1/productos
+### Lista de productos (espera 200)
+GET {{baseUrl}}/api/v1/productos
 
-### Producto por id
-GET http://localhost:3000/api/v1/productos/1
+### Producto por id (espera 200)
+GET {{baseUrl}}/api/v1/productos/1
 
-### Producto inexistente
-GET http://localhost:3000/api/v1/productos/999
+### Producto inexistente (espera 404 JSON)
+GET {{baseUrl}}/api/v1/productos/999
 
-### Id inválido
-GET http://localhost:3000/api/v1/productos/abc
+### Id inválido (espera 400 JSON)
+GET {{baseUrl}}/api/v1/productos/abc
 
-### Procedimiento de balance
-GET http://localhost:3000/api/v1/procedimiento/balance
+### Notación científica no válida (espera 400 JSON)
+GET {{baseUrl}}/api/v1/productos/1e2
+
+### Ruta API inexistente (espera 404 JSON)
+GET {{baseUrl}}/api/v1/no-existe
+
+### Procedimiento de balance (espera 200 JSON con exito: true)
+GET {{baseUrl}}/api/v1/procedimiento/balance
+
+### Cerrar sesión (espera redirección al login y eliminación de cookie)
+GET {{baseUrl}}/cerrar-sesion
+
+### API luego de cerrar sesión (espera 401 JSON)
+GET {{baseUrl}}/api/v1/productos
